@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mashinalar Ma'lumotlari</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            font-size: 1.8rem;
+        }
+
+        .select-wrapper {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            font-size: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+
+        .car-card {
+            display: none;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .car-card.active {
+            display: block;
+        }
+
+        .car-image {
+            height: 180px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .car-info {
+            padding: 1.5rem;
+        }
+
+        .car-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .specs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .spec-item {
+            background: #f1f5f9;
+            padding: 0.8rem;
+            border-radius: 8px;
+        }
+
+        .spec-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 0.2rem;
+        }
+
+        .spec-value {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .description {
+            line-height: 1.6;
+            color: var(--text-light);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .placeholder-msg {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 1.2rem; }
+            .specs { grid-template-columns: 1fr; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🚗 Mashinalar Ma'lumotlari</h1>
+    
+    <div class="select-wrapper">
+        <label for="carSelect">Mashina modelini tanlang:</label>
+        <select id="carSelect">
+            <option value="">-- Tanlang --</option>
+            <option value="cobalt">Chevrolet Cobalt</option>
+            <option value="camry">Toyota Camry</option>
+            <option value="k5">Kia K5</option>
+            <option value="x5">BMW X5</option>
+            <option value="c-class">Mercedes-Benz C-Class</option>
+            <option value="sonata">Hyundai Sonata</option>
+        </select>
+    </div>
+
+    <div id="placeholder" class="placeholder-msg">
+        Ma'lumot ko'rsatish uchun yuqoridan mashina tanlang
+    </div>
+
+    <div id="carCard" class="car-card">
+        <div class="car-image" id="carImage">MASHINA NOMI</div>
+        <div class="car-info">
+            <h2 class="car-name" id="carName"></h2>
+            <div class="specs">
+                <div class="spec-item">
+                    <div class="spec-label">Chiqarilgan yili</div>
+                    <div class="spec-value" id="carYear"></div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Dvigatel hajmi</div>
+                    <div class="spec-value" id="carEngine"></div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Quvvati</div>
+                    <div class="spec-value" id="carPower"></div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Taxminiy narx</div>
+                    <div class="spec-value" id="carPrice"></div>
+                </div>
+            </div>
+            <div class="description" id="carDesc"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Mashinalar bazasi (JSON formatida)
+    const carsDB = {
+        cobalt: {
+            name: "Chevrolet Cobalt",
+            year: "2013–2024",
+            engine: "1.5L",
+            power: "105 ot kuchi",
+            price: "$11,500 – $14,000",
+            desc: "O'zbekistonda eng ommalashgan byudjet sedan. Ishonchli dvigatel, arzon ta'mirlanadi va yonilg'i tejamkor. Oilaviy haydash va ishlatish uchun ideal tanlov.",
+            color: "linear-gradient(135deg, #3b82f6, #0ea5e9)"
+        },
+        camry: {
+            name: "Toyota Camry",
+            year: "2018–2024",
+            engine: "2.0L / 2.5L / 3.5L V6",
+            power: "150 – 301 ot kuchi",
+            price: "$26,000 – $38,000",
+            desc: "Biznes-klass sedanlarining yetakchisi. Yuqori qulaylik, past shovqin darajasi va Toyota ning afsonaviy ishonchliligi bilan mashhur. Uzoq masofalarga sayohat uchun eng yaxshi variant.",
+            color: "linear-gradient(135deg, #ef4444, #f97316)"
+        },
+        k5: {
+            name: "Kia K5",
+            year: "2020–2024",
+            engine: "1.5T / 2.0 / 2.5",
+            power: "160 – 290 ot kuchi",
+            price: "$24,000 – $32,000",
+            desc: "Zamonaviy dizayn va sport xarakteri uyg'unligi. To'liq raqamli panel, yuqori sifatli interyer va aqlli xavfsizlik tizimlari bilan jihozlangan. Yoshlar va biznes vakillari orasida juda mashhur.",
+            color: "linear-gradient(135deg, #10b981, #06b6d4)"
+        },
+        x5: {
+            name: "BMW X5",
+            year: "2019–2024",
+            engine: "2.0T / 3.0I6 / 4.4 V8",
+            power: "249 – 530 ot kuchi",
+            price: "$62,000 – $105,000",
+            desc: "Premium SUV segmentining etaloni. Off-road imkoniyatlari, yuqori tezlanish va hashamatli ichki bezak. Oilaviy sayohatlar va shahar ichida yuqori status talab qiluvchilar uchun.",
+            color: "linear-gradient(135deg, #6366f1, #8b5cf6)"
+        },
+        "c-class": {
+            name: "Mercedes-Benz C-Class",
+            year: "2021–2024",
+            engine: "1.5T / 2.0T",
+            power: "204 – 258 ot kuchi",
+            price: "$45,000 – $60,000",
+            desc: "Nemis muhandisligining nozikligi va zamonaviy texnologiyalar uyg'unligi. MBUX multimediasi, havo suspenziyasi va yuqori darajadagi shovqin izolyatsiyasi. Komfort va dinamika muvozanati.",
+            color: "linear-gradient(135deg, #475569, #0f172a)"
+        },
+        sonata: {
+            name: "Hyundai Sonata",
+            year: "2020–2024",
+            engine: "1.6T / 2.0 / 2.5",
+            power: "150 – 290 ot kuchi",
+            price: "$23,000 – $34,000",
+            desc: "Zamonaviy dizayn, keng salon va boy komplektatsiya. SmartKey, ventilatsiyalash o'rindiqlari va yuqori xavfsizlik reytingi. Narx/sifat nisbati bo'yicha yetakchi modellardan biri.",
+            color: "linear-gradient(135deg, #f59e0b, #ea580c)"
+        }
+    };
+
+    // DOM elementlar
+    const selectEl = document.getElementById('carSelect');
+    const cardEl = document.getElementById('carCard');
+    const placeholderEl = document.getElementById('placeholder');
+    
+    const els = {
+        image: document.getElementById('carImage'),
+        name: document.getElementById('carName'),
+        year: document.getElementById('carYear'),
+        engine: document.getElementById('carEngine'),
+        power: document.getElementById('carPower'),
+        price: document.getElementById('carPrice'),
+        desc: document.getElementById('carDesc')
+    };
+
+    // Tanlov o'zgarganda ishga tushadi
+    selectEl.addEventListener('change', function() {
+        const selectedKey = this.value;
+
+        if (!selectedKey) {
+            // Hech narsa tanlanmagan holat
+            cardEl.classList.remove('active');
+            placeholderEl.style.display = 'block';
+            return;
+        }
+
+        const car = carsDB[selectedKey];
+        if (!car) return; // Xavfsizlik uchun
+
+        // Ma'lumotlarni yangilash
+        els.name.textContent = car.name;
+        els.image.textContent = car.name.toUpperCase();
+        els.image.style.background = car.color;
+        els.year.textContent = car.year;
+        els.engine.textContent = car.engine;
+        els.power.textContent = car.power;
+        els.price.textContent = car.price;
+        els.desc.textContent = car.desc;
+
+        // UI o'zgarishi
+        placeholderEl.style.display = 'none';
+        cardEl.classList.add('active');
+    });
+
+    // Sahifa yuklanganda select ni tozalash
+    window.addEventListener('DOMContentLoaded', () => {
+        selectEl.value = "";
+    });
+</script>
+
+</body>
+</html>
